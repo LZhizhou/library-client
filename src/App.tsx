@@ -4,7 +4,7 @@ import { SnackBarProvider } from './context/useSnackbarContext';
 import './App.css';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import Login from './pages/Login/Login';
-// import Signup from './pages/SignUp/SignUp';
+import Signup from './pages/SignUp/SignUp';
 
 
 function App() {
@@ -15,7 +15,7 @@ function App() {
         <AuthProvider>
           <Switch>
             <Route exact path="/login" component={Login} />
-            {/* <Route exact path="/signup" component={Signup} /> */}
+            <Route exact path="/signup" component={Signup} />
 
             <ProtectedRoute path="*" exact>
                         <Redirect to="/login" />

@@ -9,9 +9,12 @@ import login from '../../helpers/APICalls/login';
 import LoginForm from './LoginForm/LoginForm';
 import { useAuth } from '../../context/useAuthContext';
 import { useSnackBar } from '../../context/useSnackbarContext';
+import Button from '@material-ui/core/Button';
+import { useHistory } from 'react-router';
 
 export default function Login(): JSX.Element {
   const classes = useStyles();
+  const history = useHistory();
   const { updateLoginContext } = useAuth();
   const { updateSnackBarMessage } = useSnackBar();
 
@@ -49,6 +52,10 @@ export default function Login(): JSX.Element {
               </Grid>
             </Grid>
             <LoginForm handleSubmit={handleSubmit} />
+            <Typography>Don't have An account Yet?</Typography>
+            <Button color="primary" onClick={() => history.push('/signup')}>
+              Sign up now
+            </Button>
           </Paper>
         </Box>
         <Box p={1} alignSelf="center" />

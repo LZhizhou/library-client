@@ -14,7 +14,7 @@ const useStyles = makeStyles(() => ({
     flexDirection: 'column',
     minHeight: '100vh',
   },
-  loginPaper: {
+  signupPager: {
     padding: '3em',
     textAlign: 'center',
   },
@@ -23,12 +23,7 @@ const useStyles = makeStyles(() => ({
     paddingBottom: 20,
     color: '#000000',
     fontWeight: 700,
-    boxShadow: 'none',
     fontFamily: "'Open Sans'",
-  },
-  signup: {
-    padding: '1.75em',
-    margin: '1.5em',
   },
 }));
 
