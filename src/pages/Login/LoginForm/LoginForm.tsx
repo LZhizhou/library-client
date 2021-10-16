@@ -10,17 +10,17 @@ import { CircularProgress } from '@material-ui/core';
 interface Props {
   handleSubmit: (
     {
-      email,
+      username,
       password,
     }: {
-      email: string;
+      username: string;
       password: string;
     },
     {
       setStatus,
       setSubmitting,
     }: FormikHelpers<{
-      email: string;
+      username: string;
       password: string;
     }>,
   ) => void;
@@ -32,11 +32,11 @@ export default function Login({ handleSubmit }: Props): JSX.Element {
   return (
     <Formik
       initialValues={{
-        email: '',
+        username: '',
         password: '',
       }}
       validationSchema={Yup.object().shape({
-        email: Yup.string().required('Email is required').email('Email is not valid'),
+        username: Yup.string().required('Username is required').max(40, 'Username is too long'),
         password: Yup.string()
           .required('Password is required')
           .max(100, 'Password is too long')
@@ -47,11 +47,11 @@ export default function Login({ handleSubmit }: Props): JSX.Element {
       {({ handleSubmit, handleChange, values, touched, errors, isSubmitting }) => (
         <form onSubmit={handleSubmit} className={classes.form} noValidate>
           <Typography className={classes.label} align="left">
-            E-mail
+            Username
           </Typography>
           <TextField
             variant="outlined"
-            id="email"
+            id="username"
             fullWidth
             margin="normal"
             placeholder="Enter e-mail address"
@@ -61,12 +61,12 @@ export default function Login({ handleSubmit }: Props): JSX.Element {
             InputProps={{
               classes: { input: classes.inputs },
             }}
-            name="email"
-            autoComplete="email"
+            name="username"
+            autoComplete="username"
             autoFocus
-            helperText={touched.email ? errors.email : ''}
-            error={touched.email && Boolean(errors.email)}
-            value={values.email}
+            helperText={touched.username ? errors.username : ''}
+            error={touched.username && Boolean(errors.username)}
+            value={values.username}
             onChange={handleChange}
           />
           <Typography className={classes.label} align="left">

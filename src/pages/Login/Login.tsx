@@ -19,10 +19,10 @@ export default function Login(): JSX.Element {
   const { updateSnackBarMessage } = useSnackBar();
 
   const handleSubmit = (
-    { email, password }: { email: string; password: string },
-    { setSubmitting }: FormikHelpers<{ email: string; password: string }>,
+    { username, password }: { username: string; password: string },
+    { setSubmitting }: FormikHelpers<{ username: string; password: string }>,
   ) => {
-    login(email, password).then((data) => {
+    login(username, password).then((data) => {
       if (data.error) {
         setSubmitting(false);
         updateSnackBarMessage(data.error.message);
