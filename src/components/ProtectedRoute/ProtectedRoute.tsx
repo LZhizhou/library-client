@@ -1,5 +1,6 @@
 import { Route, Redirect } from 'react-router-dom';
 import { useAuth } from '../../context/useAuthContext';
+import React from 'react';
 
 type ProtectedRouteProps = {
   children: JSX.Element;

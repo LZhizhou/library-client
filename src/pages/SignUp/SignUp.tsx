@@ -1,16 +1,17 @@
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Paper from '@material-ui/core/Paper';
-import Box from '@material-ui/core/Box';
-import Grid from '@material-ui/core/Grid';
+import CssBaseline from '@mui/material/CssBaseline';
+import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
 import { FormikHelpers } from 'formik';
-import Typography from '@material-ui/core/Typography';
+import Typography from '@mui/material/Typography';
 import useStyles from './useStyles';
 import register from '../../helpers/APICalls/register';
 import SignUpForm from './SignUpForm/SignUpForm';
 import { useAuth } from '../../context/useAuthContext';
 import { useSnackBar } from '../../context/useSnackbarContext';
-import { Button } from '@material-ui/core';
+import { Button } from '@mui/material';
 import { useHistory } from 'react-router';
+import React from 'react';
 
 export default function Register(): JSX.Element {
     const classes = useStyles();
@@ -24,9 +25,9 @@ export default function Register(): JSX.Element {
     ) => {
         register(username, email, password,phone).then((data) => {
             if (data.error) {
-                console.error({ error: data.error.message });
+                console.error({ error: data.error });
                 setSubmitting(false);
-                updateSnackBarMessage(data.error.message);
+                updateSnackBarMessage(data.error);
             } else if (data.success) {
                 updateLoginContext(data.success);
             } else {

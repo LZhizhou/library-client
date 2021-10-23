@@ -1,12 +1,11 @@
 import { User } from './User';
 
 export interface AuthApiDataSuccess {
-  message: string;
-  user: User;
+  info: User
   token: string;
 }
 
 export interface AuthApiData {
-  error?: { message: string };
+  error?: string;
   success?: AuthApiDataSuccess;
 }
