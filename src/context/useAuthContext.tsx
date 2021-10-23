@@ -5,6 +5,7 @@ import { User } from '../interface/User';
 import loginWithCookies from '../helpers/APICalls/loginWithCookies';
 import logoutAPI from '../helpers/APICalls/logout';
 import { useSnackBar } from '../context/useSnackbarContext';
+import React from 'react';
 
 interface IAuthContext {
   loggedInUser: User | null | undefined;
@@ -26,9 +27,9 @@ export const AuthProvider: FunctionComponent = ({ children }): JSX.Element => {
 
   const updateLoginContext = useCallback(
     (data: AuthApiDataSuccess) => {
-      setLoggedInUser(data.user);
+      setLoggedInUser(data.info);
       history.push('/home');
-      updateSnackBarMessage(`Welcome Back ${data.user.username}`);
+      updateSnackBarMessage(`Welcome Back ${data.info.username}`);
     },
     [history, updateSnackBarMessage],
   );
