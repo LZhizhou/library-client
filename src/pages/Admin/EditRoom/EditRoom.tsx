@@ -15,7 +15,7 @@ import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DesktopDateRangePicker from "@mui/lab/DesktopDateRangePicker";
 import { DateRange } from "@mui/lab/DateRangePicker";
 import MobileDatePicker from "@mui/lab/MobileDatePicker";
-import MobileTimePicker from '@mui/lab/MobileTimePicker';
+import MobileTimePicker from "@mui/lab/MobileTimePicker";
 import {
   DataGrid,
   GridColDef,
@@ -60,13 +60,13 @@ export default function EditRoom(): JSX.Element {
   const hourPickers = (params: GridRenderCellParams) => {
     return (
       <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <MobileTimePicker 
+        <MobileTimePicker
           value={openTime}
           onChange={(newValue) => {}}
           renderInput={(params) => <TextField {...params} />}
         />
         {"-"}
-        <MobileTimePicker  
+        <MobileTimePicker
           value={closeTime}
           onChange={(newValue) => {}}
           renderInput={(params) => <TextField {...params} />}
@@ -141,31 +141,8 @@ export default function EditRoom(): JSX.Element {
       className={classes.root}
       direction={"column"}
     >
-      <Grid item container direction={"row"}>
-        <Grid item xs={4}>
-          <Typography variant={"h5"}>Room List</Typography>
-        </Grid>
-        <Grid item xs={8}>
-          <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <DesktopDateRangePicker
-              startText="From"
-              endText="To"
-              value={value}
-              showToolbar={false}
-              onChange={(newValue) => {
-                if (newValue) {
-                  setValue(newValue);
-                }
-              }}
-              renderInput={(startProps, endProps) => (
-                <React.Fragment>
-                  <TextField {...startProps} />
-                  <TextField {...endProps} />
-                </React.Fragment>
-              )}
-            />
-          </LocalizationProvider>
-        </Grid>
+      <Grid item xs={4}>
+        <Typography variant={"h5"}>Room List</Typography>
       </Grid>
 
       <DataGrid
