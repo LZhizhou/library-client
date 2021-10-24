@@ -47,32 +47,40 @@ export default function EditRoom(): JSX.Element {
     );
   };
   const datePicker = (params: GridRenderCellParams) => {
-    return (
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <MobileDatePicker
-          value={tempOpenUntill}
-          onChange={(newValue) => {}}
-          renderInput={(params) => <TextField {...params} />}
-        />
-      </LocalizationProvider>
-    );
+    if (params.row.open) {
+      return (
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <MobileDatePicker
+            value={tempOpenUntill}
+            onChange={(newValue) => {}}
+            renderInput={(params) => <TextField {...params} />}
+          />
+        </LocalizationProvider>
+      );
+    } else {
+      return "N/A";
+    }
   };
   const hourPickers = (params: GridRenderCellParams) => {
-    return (
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <MobileTimePicker
-          value={openTime}
-          onChange={(newValue) => {}}
-          renderInput={(params) => <TextField {...params} />}
-        />
-        {"-"}
-        <MobileTimePicker
-          value={closeTime}
-          onChange={(newValue) => {}}
-          renderInput={(params) => <TextField {...params} />}
-        />
-      </LocalizationProvider>
-    );
+    if (params.row.open) {
+      return (
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <MobileTimePicker
+            value={openTime}
+            onChange={(newValue) => {}}
+            renderInput={(params) => <TextField {...params} />}
+          />
+          {"-"}
+          <MobileTimePicker
+            value={closeTime}
+            onChange={(newValue) => {}}
+            renderInput={(params) => <TextField {...params} />}
+          />
+        </LocalizationProvider>
+      );
+    } else {
+      return "N/A";
+    }
   };
   const columns: GridColDef[] = [
     {
@@ -130,7 +138,11 @@ export default function EditRoom(): JSX.Element {
       id: "1F1A",
       capacity: 10,
       open: true,
-      time: "10:00-12:30 05/08/2021",
+    },
+    {
+      id: "3D13",
+      capacity: 16,
+      open: false,
     },
   ];
 
