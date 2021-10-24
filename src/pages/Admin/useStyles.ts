@@ -5,7 +5,6 @@ const useStyles = makeStyles(() => ({
         minHeight: '100vh',
         '& .MuiInput-underline:before': {
           borderBottom: '1.2px solid rgba(0, 0, 0, 0.2)',
-          direction:"row",
 
         },
         
