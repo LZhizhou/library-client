@@ -101,40 +101,46 @@ export default function Booking(): JSX.Element {
   ];
 
   return (
-    <Grid container component="main" className={classes.root}>
-      <Grid item xs={4}>
-        Incoming Booking
+    <Grid
+      container
+      component="main"
+      className={classes.root}
+      direction={"column"}
+    >
+      <Grid item container direction={"row"}>
+        <Grid item xs={4}>
+          Incoming Booking
+        </Grid>
+        <Grid item xs={8}>
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <DesktopDateRangePicker
+              startText="From"
+              endText="To"
+              value={value}
+              showToolbar={false}
+              onChange={(newValue) => {
+                if (newValue) {
+                  setValue(newValue);
+                }
+              }}
+              renderInput={(startProps, endProps) => (
+                <React.Fragment>
+                  <TextField {...startProps} />
+                  <TextField {...endProps} />
+                </React.Fragment>
+              )}
+            />
+          </LocalizationProvider>
+        </Grid>
       </Grid>
-      <Grid item xs={8}>
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <DesktopDateRangePicker
-            startText="From"
-            endText="To"
-            value={value}
-            showToolbar={false}
-            onChange={(newValue) => {
-              if (newValue) {
-                setValue(newValue);
-              }
-            }}
-            renderInput={(startProps, endProps) => (
-              <React.Fragment>
-                <TextField {...startProps} />
-                <TextField {...endProps} />
-              </React.Fragment>
-            )}
-          />
-        </LocalizationProvider>
-      </Grid>
-      <Grid xs={12}>
-        <DataGrid
-          rows={rows}
-          columns={columns}
-          pageSize={5}
-          rowsPerPageOptions={[5]}
-          disableSelectionOnClick
-        />
-      </Grid>
+
+      <DataGrid
+        rows={rows}
+        columns={columns}
+        pageSize={5}
+        rowsPerPageOptions={[5]}
+        disableSelectionOnClick
+      />
     </Grid>
   );
 }
