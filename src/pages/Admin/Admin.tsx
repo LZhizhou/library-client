@@ -2,6 +2,7 @@ import { CssBaseline, Grid, Paper, Tab, Tabs } from "@mui/material";
 import React, { useState } from "react";
 import AdminProfile from "./AdminProfile/AdminProfile";
 import Booking from "./Booking/Booking";
+import EditRoom from "./EditRoom/EditRoom";
 import useStyles from "./useStyles";
 
 export default function Admin(): JSX.Element {
@@ -16,14 +17,20 @@ export default function Admin(): JSX.Element {
       <Grid sx={{ width: 256, height: 256 }} item>
         <AdminProfile />
       </Grid>
-            <Grid xs={8} item>
-                <Tabs value={tabIndex} onChange={handleChange} aria-label="basic tabs example">
-                    <Tab label="Bookings" />
-                    <Tab label="Add/Edit Room" />
-                </Tabs>
-                {tabIndex === 0 && <Grid item><Booking />
-                </Grid>}
-            </Grid>
+      <Grid xs={8} item>
+        <Tabs
+          value={tabIndex}
+          onChange={handleChange}
+          aria-label="basic tabs example"
+        >
+          <Tab label="Bookings" />
+          <Tab label="Add/Edit Room" />
+        </Tabs>
+        <Grid item>
+          {tabIndex === 0 && <Booking />}
+          {tabIndex === 1 && <EditRoom />}
         </Grid>
-    );
+      </Grid>
+    </Grid>
+  );
 }
