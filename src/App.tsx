@@ -19,10 +19,13 @@ function App() {
         <Switch>
           <Route exact path="/login" component={Login} />
           <Route exact path="/signup" component={Signup} />
-          {/* <Route exact path="/admin" component={Admin} /> */}
-          <Route exact path="/user" component={UserPage} />
+          {/* <Route exact path="/admin" component={Admin} />
+          <Route exact path="/user" component={UserPage} /> */}
           <ProtectedRoute exact path="/admin"  >
             <Admin/>
+          </ProtectedRoute>
+          <ProtectedRoute exact path="/user"  >
+            <UserPage/>
           </ProtectedRoute>
           <ProtectedRoute path="*" exact>
             <Redirect to="/login" />

@@ -14,7 +14,7 @@ const incomingBookings = async (libraryID: string): Promise<RoomApiData> => {
   )
     .then((res) => res.json())
     .catch(() => ({
-      error: { message: "Unable to connect to server. Please try again" },
+      error:'Unable to connect to server. Please try again',
     }));
 };
 export default incomingBookings;

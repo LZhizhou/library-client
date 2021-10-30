@@ -1,8 +1,8 @@
-export interface library{
+export interface Library{
     address:string,
     closeTime:string,
     email:string,
-    libraryID:string,
+    libraryId:string,
     name:string,
     openTime:string,
     roomCount:number,

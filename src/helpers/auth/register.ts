@@ -17,7 +17,7 @@ const register = async (
   return await fetch(`http://101.35.91.117:7894/springboot2webapp/register`, fetchOptions)
     .then((res) => res.json())
     .catch(() => ({
-      error: { message: "Unable to connect to server. Please try again" },
+      error: 'Unable to connect to server. Please try again',
     }));
 };
 

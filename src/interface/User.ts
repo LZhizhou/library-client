@@ -1,10 +1,9 @@
-import { library } from "./Library";
+import { Library } from "./Library";
 
 export interface User {
-  id: string;
   username: string;
   email?: string;
   phone?: string;
   adress?: string;
-  library?: String;
+  library?: Library;
 }
