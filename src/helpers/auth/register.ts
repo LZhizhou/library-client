@@ -14,7 +14,7 @@ const register = async (
     body: JSON.stringify({ username, email, password, phone, address }),
     credentials: "include",
   };
-  return await fetch(`http://127.0.0.1:7894/auth/register`, fetchOptions)
+  return await fetch(`http://101.35.91.117:7894/springboot2webapp/register`, fetchOptions)
     .then((res) => res.json())
     .catch(() => ({
       error: { message: "Unable to connect to server. Please try again" },

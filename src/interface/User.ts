@@ -6,5 +6,5 @@ export interface User {
   email?: string;
   phone?: string;
   adress?: string;
-  library?: library;
+  library?: String;
 }
