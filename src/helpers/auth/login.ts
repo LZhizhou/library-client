@@ -11,7 +11,7 @@ const login = async (
     body: JSON.stringify({ username, password }),
     credentials: "omit",
   };
-  return await fetch(`/springboot2webapp/login`, fetchOptions)
+  return await fetch(`http://127.0.0.1:7894/springboot2webapp/login`, fetchOptions)
     .then((res) => res.json())
     .catch(() => ({
       error: { message: "Unable to connect to server. Please try again" },
