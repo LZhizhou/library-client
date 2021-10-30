@@ -25,7 +25,7 @@ export default function BookRoom(): JSX.Element {
     now,
     new Date(now.getFullYear(), now.getMonth() + 1, now.getDate()),
   ]);
-  const cancelButton = (params: GridRenderCellParams) => {
+  const bookButton = (params: GridRenderCellParams) => {
     return (
       <strong>
         <Button
@@ -34,7 +34,7 @@ export default function BookRoom(): JSX.Element {
           size="small"
           onClick={() => {}}
         >
-          Cancel
+          Book
         </Button>
       </strong>
     );
@@ -42,12 +42,11 @@ export default function BookRoom(): JSX.Element {
   const columns: GridColDef[] = [
     {
       field: "id",
-      headerName: "Booking Ref",
+      headerName: "Room No.",
       width: 130,
       editable: false,
       sortable: false,
     },
-    { field: "roomID", headerName: "Room ID", width: 110, sortable: false },
     {
       field: "capacity",
       headerName: "Capacity",
@@ -63,40 +62,22 @@ export default function BookRoom(): JSX.Element {
       editable: false,
       sortable: false,
     },
-
     {
-      field: "username",
-      headerName: "Username",
+      field: "book",
+      headerName: "Book",
       editable: false,
       sortable: false,
       width: 120,
-    },
-    {
-      field: "phone",
-      headerName: "phone No.",
-      editable: false,
-      sortable: false,
-      width: 130,
-    },
-    {
-      field: "cancel",
-      headerName: "Cancel",
-      editable: false,
-      sortable: false,
-      width: 120,
-      renderCell: cancelButton,
+      renderCell: bookButton,
     },
   ];
   const [selectedLibrary, setLibrary] = useState<string>();
 
   const rows = [
     {
-      roomID: "1F1A",
+      id: "1F1A",
       capacity: 10,
       time: "10:00-12:30 05/08/2021",
-      id: "SHDYSB",
-      username: "Andy",
-      phone: "+61 412 345 678",
     },
   ];
   const libraries = [
@@ -137,6 +118,7 @@ export default function BookRoom(): JSX.Element {
             onChange={handleLibraryChange}
             value={selectedLibrary}
             label="Selected Library"
+            defaultValue={libraries[0]}
           >
             {libraries.map((library) => (
               <MenuItem key={library} value={library}>

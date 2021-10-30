@@ -28,7 +28,7 @@ export default function ViewBookings(): JSX.Element {
   const tempOpenUntill = new Date(2021, 11, 31);
   const openTime = new Date(2021, 11, 31, 8);
   const closeTime = new Date(2021, 11, 31, 22);
-  const [value, setValue] = React.useState<DateRange<Date>>([
+  const [dateRange, setDateRange] = React.useState<DateRange<Date>>([
     now,
     new Date(now.getFullYear(), now.getMonth() + 1, now.getDate()),
   ]);
@@ -46,47 +46,46 @@ export default function ViewBookings(): JSX.Element {
       </strong>
     );
   };
-  const datePicker = (params: GridRenderCellParams) => {
-    if (params.row.open) {
-      return (
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <MobileDatePicker
-            value={tempOpenUntill}
-            onChange={(newValue) => {}}
-            renderInput={(params) => <TextField {...params} />}
-          />
-        </LocalizationProvider>
-      );
-    } else {
-      return "N/A";
-    }
+  const cancelButton = (params: GridRenderCellParams) => {
+    return (
+      <strong>
+        <Button
+          variant="contained"
+          color="primary"
+          size="small"
+          onClick={() => {}}
+        >
+          Cancel
+        </Button>
+      </strong>
+    );
   };
-  const hourPickers = (params: GridRenderCellParams) => {
-    if (params.row.open) {
-      return (
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <MobileTimePicker
-            value={openTime}
-            onChange={(newValue) => {}}
-            renderInput={(params) => <TextField {...params} />}
-          />
-          {"-"}
-          <MobileTimePicker
-            value={closeTime}
-            onChange={(newValue) => {}}
-            renderInput={(params) => <TextField {...params} />}
-          />
-        </LocalizationProvider>
-      );
-    } else {
-      return "N/A";
-    }
+  const editButton = (params: GridRenderCellParams) => {
+    return (
+      <strong>
+        <Button
+          variant="contained"
+          color="primary"
+          size="small"
+          onClick={() => {}}
+        >
+          Edit
+        </Button>
+      </strong>
+    );
   };
   const columns: GridColDef[] = [
     {
-      field: "id",
-      headerName: "Room ID",
+      field: "library",
+      headerName: "Library",
       width: 130,
+      editable: false,
+      sortable: false,
+    },
+    {
+      field: "roomId",
+      headerName: "Room ID",
+      width: 110,
       editable: false,
       sortable: false,
     },
@@ -99,50 +98,44 @@ export default function ViewBookings(): JSX.Element {
       sortable: false,
     },
     {
-      field: "openUntill",
-      headerName: "Open Untill",
+      field: "time",
+      headerName: "Time",
+      width: 180,
       editable: false,
       sortable: false,
-      width: 150,
-      renderCell: datePicker,
     },
     {
-      field: "open",
-      headerName: "Open/Close",
-      type: "boolean",
+      field: "id",
+      headerName: "BookingRef",
       width: 130,
       editable: false,
       sortable: false,
     },
     {
-      field: "hours",
-      headerName: "Opening hours",
-      editable: false,
-      sortable: false,
-      width: 250,
-      renderCell: hourPickers,
-    },
-
-    {
-      field: "update",
-      headerName: "Update",
+      field: "cancel",
+      headerName: "Cancel",
       editable: false,
       sortable: false,
       width: 120,
-      renderCell: updateButton,
+      renderCell: cancelButton,
+    },
+    {
+      field: "edit",
+      headerName: "Edit",
+      editable: false,
+      sortable: false,
+      width: 120,
+      renderCell: editButton,
     },
   ];
 
   const rows = [
     {
-      id: "1F1A",
+      id: "SHDYSB",
       capacity: 10,
-      open: true,
-    },
-    {
-      id: "3D13",
-      capacity: 16,
-      open: false,
+      roomId:"1F1A",
+      library:"Top Ryde Library",
+      time:"10:00-12:30 05/08/2021" 
     },
   ];
 
@@ -153,10 +146,32 @@ export default function ViewBookings(): JSX.Element {
       className={classes.root}
       direction={"column"}
     >
-      <Grid item xs={4}>
-        <Typography variant={"h5"}>Room List</Typography>
+      <Grid item container direction={"row"}>
+        <Grid item xs={4}>
+          <Typography variant={"h5"}>Room List</Typography>
+        </Grid>
+        <Grid item xs={8}>
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <DesktopDateRangePicker
+              startText="From"
+              endText="To"
+              value={dateRange}
+              showToolbar={false}
+              onChange={(newDateRange) => {
+                if (newDateRange) {
+                  setDateRange(newDateRange);
+                }
+              }}
+              renderInput={(startProps, endProps) => (
+                <React.Fragment>
+                  <TextField {...startProps} />
+                  <TextField {...endProps} />
+                </React.Fragment>
+              )}
+            />
+          </LocalizationProvider>
+        </Grid>
       </Grid>
-
       <DataGrid
         rows={rows}
         columns={columns}

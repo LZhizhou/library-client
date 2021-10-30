@@ -5,4 +5,5 @@ export interface FetchOptions {
     };
     body?: BodyInit;
     credentials: RequestCredentials;
+    
   }
