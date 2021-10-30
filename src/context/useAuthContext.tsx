@@ -2,8 +2,8 @@ import { useState, useContext, createContext, FunctionComponent, useEffect, useC
 import { useHistory } from 'react-router-dom';
 import { AuthApiData, AuthApiDataSuccess } from '../interface/AuthApiData';
 import { User } from '../interface/User';
-import loginWithCookies from '../helpers/APICalls/loginWithCookies';
-import logoutAPI from '../helpers/APICalls/logout';
+import loginWithCookies from '../helpers/auth/loginWithCookies';
+import logoutAPI from '../helpers/auth/logout';
 import { useSnackBar } from '../context/useSnackbarContext';
 import React from 'react';
 

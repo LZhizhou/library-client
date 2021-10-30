@@ -14,17 +14,18 @@ function App() {
 
     <BrowserRouter>
       <SnackBarProvider>
-        {/* <AuthProvider> */}
+        <AuthProvider>
         <Switch>
-          <Route exact path="/admin" component={Admin} />
           <Route exact path="/login" component={Login} />
           <Route exact path="/signup" component={Signup} />
-
+          <ProtectedRoute exact path="/admin"  >
+            <Admin/>
+          </ProtectedRoute>
           <ProtectedRoute path="*" exact>
             <Redirect to="/login" />
           </ProtectedRoute>
         </Switch>
-        {/* </AuthProvider> */}
+        </AuthProvider>
       </SnackBarProvider>
     </BrowserRouter>
   );

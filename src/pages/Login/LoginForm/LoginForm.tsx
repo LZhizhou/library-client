@@ -41,7 +41,7 @@ export default function Login({ handleSubmit }: Props): JSX.Element {
         password: Yup.string()
           .required('Password is required')
           .max(100, 'Password is too long')
-          .min(6, 'Password too short'),
+          .min(3, 'Password too short'),
       })}
       onSubmit={handleSubmit}
     >

@@ -14,16 +14,11 @@ import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DesktopDateRangePicker from "@mui/lab/DesktopDateRangePicker";
 import { DateRange } from "@mui/lab/DateRangePicker";
-import {
-  DataGrid,
-  GridColDef,
-  GridRenderCellParams,
-  GridValueGetterParams,
-} from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 export default function Booking(): JSX.Element {
   const classes = useStyles();
   const now = new Date();
-  const [value, setValue] = React.useState<DateRange<Date>>([
+  const [dateRange, setDateRange] = React.useState<DateRange<Date>>([
     now,
     new Date(now.getFullYear(), now.getMonth() + 1, now.getDate()),
   ]);
@@ -117,11 +112,11 @@ export default function Booking(): JSX.Element {
             <DesktopDateRangePicker
               startText="From"
               endText="To"
-              value={value}
+              value={dateRange}
               showToolbar={false}
-              onChange={(newValue) => {
-                if (newValue) {
-                  setValue(newValue);
+              onChange={(newDateRange) => {
+                if (newDateRange) {
+                  setDateRange(newDateRange);
                 }
               }}
               renderInput={(startProps, endProps) => (

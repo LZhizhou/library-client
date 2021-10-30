@@ -37,6 +37,8 @@
     "use-debounce": "^6.0.0",
     "yup": "^0.32.8"
   },
+  "proxy": "http://localhost:7894/springboot2webapp",
+  
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
@@ -44,7 +46,6 @@
     "eject": "react-scripts eject",
     "lint": "eslint '*/**/*.{js,ts,tsx}' --fix"
   },
-  "proxy": "http://localhost:7894",
   "eslintConfig": {
     "extends": "react-app"
   },
@@ -61,7 +62,7 @@
     ]
   },
   "devDependencies": {
-    "@types/react-router-dom": "^5.1.7",
+    "@types/react-router-dom": "^5.3.0",
     "@typescript-eslint/eslint-plugin": "^4.23.0",
     "@typescript-eslint/parser": "^4.23.0",
     "eslint-config-prettier": "^8.3.0",

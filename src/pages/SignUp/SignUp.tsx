@@ -5,7 +5,7 @@ import Grid from "@mui/material/Grid";
 import { FormikHelpers } from "formik";
 import Typography from "@mui/material/Typography";
 import useStyles from "./useStyles";
-import register from "../../helpers/APICalls/register";
+import register from "../../helpers/auth/register";
 import SignUpForm from "./SignUpForm/SignUpForm";
 import { useAuth } from "../../context/useAuthContext";
 import { useSnackBar } from "../../context/useSnackbarContext";
