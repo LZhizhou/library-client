@@ -9,12 +9,14 @@ import {
   Typography,
 } from "@mui/material";
 import useStyles from "../useStyles";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DesktopDateRangePicker from "@mui/lab/DesktopDateRangePicker";
 import { DateRange } from "@mui/lab/DateRangePicker";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
+import incomingBookings from "../../../helpers/admin/IncomingBookings";
+import { useAuth } from "../../../context/useAuthContext";
 export default function Booking(): JSX.Element {
   const classes = useStyles();
   const now = new Date();
@@ -22,6 +24,24 @@ export default function Booking(): JSX.Element {
     now,
     new Date(now.getFullYear(), now.getMonth() + 1, now.getDate()),
   ]);
+  const { loggedInUser } = useAuth();
+  useEffect(() => {
+    incomingBookings({
+      libraryID: loggedInUser?.library?.libraryId,
+      username: loggedInUser?.username,
+      startDate: dateRange[0]?.getDate.toString(),
+      endDate: dateRange[1]?.getDate.toString(),
+    }).then((response) => {
+      
+      console.log("incomingBookings:",response)
+      console.log({
+        libraryID: loggedInUser?.library?.libraryId,
+        username: loggedInUser?.username,
+        startDate: dateRange[0]?.toLocaleDateString().replaceAll('/','-'),
+        endDate: dateRange[1]?.toLocaleDateString().replaceAll('/','-'),
+      })
+    });
+  },[loggedInUser,dateRange]);
   const cancelButton = (params: GridRenderCellParams) => {
     return (
       <strong>

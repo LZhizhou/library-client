@@ -22,12 +22,8 @@ export default function AdminProfile(): JSX.Element {
       <Paper>
         <img className={classes.userImage} src="/userImage.png" />
         <Typography className={classes.username} variant="h6">{loggedInUser?.username??'username'}</Typography>
-        <Typography className={classes.emailAndPhone}>{loggedInUser?.email??'email'}</Typography>
-        <Typography className={classes.emailAndPhone}>{loggedInUser?.phone??'phone'}</Typography>
-        <Typography>Library Name</Typography>
-        <Typography>Open Room</Typography>
-        <Typography>Total Room</Typography>
-        <Typography>Incoming booking</Typography>
+        <Typography className={classes.emailAndPhone}>{loggedInUser?.library?.email??'email'}</Typography>
+        <Typography>Library Name :{loggedInUser?.library?.name}</Typography>
       </Paper>
 
   );
