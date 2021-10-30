@@ -7,6 +7,7 @@ import Login from './pages/Login/Login';
 import Signup from './pages/SignUp/SignUp';
 import Admin from './pages/Admin/Admin';
 import React from 'react';
+import UserPage from './pages/UserPage/UserPage';
 
 
 function App() {
@@ -18,9 +19,11 @@ function App() {
         <Switch>
           <Route exact path="/login" component={Login} />
           <Route exact path="/signup" component={Signup} />
-          <ProtectedRoute exact path="/admin"  >
+          <Route exact path="/admin" component={Admin} />
+          <Route exact path="/user" component={UserPage} />
+          {/* <ProtectedRoute exact path="/admin"  >
             <Admin/>
-          </ProtectedRoute>
+          </ProtectedRoute> */}
           <ProtectedRoute path="*" exact>
             <Redirect to="/login" />
           </ProtectedRoute>

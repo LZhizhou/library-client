@@ -28,7 +28,11 @@ export const AuthProvider: FunctionComponent = ({ children }): JSX.Element => {
   const updateLoginContext = useCallback(
     (data: AuthApiDataSuccess) => {
       setLoggedInUser(data.info);
-      history.push('/home');
+      if(data.info.library){
+        history.push('/admin');
+      }else{
+        history.push('/user');
+      }
       updateSnackBarMessage(`Welcome Back ${data.info.username}`);
     },
     [history, updateSnackBarMessage],
@@ -38,7 +42,7 @@ export const AuthProvider: FunctionComponent = ({ children }): JSX.Element => {
     // needed to remove token cookie
     await logoutAPI()
       .then(() => {
-        history.push('/home');
+        history.push('/login');
         updateSnackBarMessage(`GoodBye`);
         setLoggedInUser(null);
       })

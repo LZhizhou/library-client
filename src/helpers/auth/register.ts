@@ -14,7 +14,7 @@ const register = async (
     body: JSON.stringify({ username, email, password, phone, address }),
     credentials: "include",
   };
-  return await fetch(`/auth/register`, fetchOptions)
+  return await fetch(`http://127.0.0.1:7894/auth/register`, fetchOptions)
     .then((res) => res.json())
     .catch(() => ({
       error: { message: "Unable to connect to server. Please try again" },
