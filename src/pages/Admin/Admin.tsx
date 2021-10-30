@@ -1,7 +1,7 @@
 import { CssBaseline, Grid, Paper, Tab, Tabs } from "@mui/material";
 import React, { useState } from "react";
 import AdminProfile from "./AdminProfile/AdminProfile";
-import Booking from "./Booking/Booking";
+import BookingTable from "./Booking/Booking";
 import EditRoom from "./EditRoom/EditRoom";
 import useStyles from "./useStyles";
 
@@ -26,7 +26,7 @@ export default function Admin(): JSX.Element {
           <Tab label="Add/Edit Room" />
         </Tabs>
         <Grid item>
-          {tabIndex === 0 && <Booking />}
+          {tabIndex === 0 && <BookingTable />}
           {tabIndex === 1 && <EditRoom />}
         </Grid>
       </Grid>

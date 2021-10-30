@@ -1,13 +1,4 @@
-import {
-  Box,
-  Button,
-  Grid,
-  InputAdornment,
-  Stack,
-  TextField,
-  TextFieldProps,
-  Typography,
-} from "@mui/material";
+import { Button, Grid, TextField, Typography } from "@mui/material";
 import useStyles from "../useStyles";
 import React, { useEffect, useState } from "react";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
@@ -17,31 +8,30 @@ import { DateRange } from "@mui/lab/DateRangePicker";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import incomingBookings from "../../../helpers/admin/IncomingBookings";
 import { useAuth } from "../../../context/useAuthContext";
-export default function Booking(): JSX.Element {
+import { Booking } from "../../../interface/BookingsApiData";
+import cancelBooking from "../../../helpers/admin/cancelBooking";
+export default function BookingTable(): JSX.Element {
   const classes = useStyles();
   const now = new Date();
+  const [bookingList, setBookingList] = useState<Booking[]>([]);
   const [dateRange, setDateRange] = React.useState<DateRange<Date>>([
     now,
     new Date(now.getFullYear(), now.getMonth() + 1, now.getDate()),
   ]);
-  const { loggedInUser } = useAuth();
+  const { loggedInUser, token } = useAuth();
   useEffect(() => {
     incomingBookings({
       libraryID: loggedInUser?.library?.libraryId,
       username: loggedInUser?.username,
       startDate: dateRange[0]?.getDate.toString(),
       endDate: dateRange[1]?.getDate.toString(),
+      token: token,
     }).then((response) => {
-      
-      console.log("incomingBookings:",response)
-      console.log({
-        libraryID: loggedInUser?.library?.libraryId,
-        username: loggedInUser?.username,
-        startDate: dateRange[0]?.toLocaleDateString().replaceAll('/','-'),
-        endDate: dateRange[1]?.toLocaleDateString().replaceAll('/','-'),
-      })
+      if (response.success) {
+        setBookingList(response.success);
+      }
     });
-  },[loggedInUser,dateRange]);
+  }, [loggedInUser, dateRange]);
   const cancelButton = (params: GridRenderCellParams) => {
     return (
       <strong>
@@ -49,7 +39,9 @@ export default function Booking(): JSX.Element {
           variant="contained"
           color="primary"
           size="small"
-          onClick={() => {}}
+          onClick={() => {
+            cancelBooking({ token, reservationID: params.row.bookingID });
+          }}
         >
           Cancel
         </Button>
@@ -74,9 +66,16 @@ export default function Booking(): JSX.Element {
       sortable: false,
     },
     {
-      field: "time",
-      headerName: "Time",
-      width: 180,
+      field: "startTime",
+      headerName: "Start Time",
+      width: 150,
+      editable: false,
+      sortable: false,
+    },
+    {
+      field: "endTime",
+      headerName: "End Time",
+      width: 150,
       editable: false,
       sortable: false,
     },
@@ -89,8 +88,15 @@ export default function Booking(): JSX.Element {
       width: 120,
     },
     {
-      field: "phone",
+      field: "userPhone",
       headerName: "phone No.",
+      editable: false,
+      sortable: false,
+      width: 130,
+    },
+    {
+      field: "userEmail",
+      headerName: "Eamil",
       editable: false,
       sortable: false,
       width: 130,
@@ -102,17 +108,6 @@ export default function Booking(): JSX.Element {
       sortable: false,
       width: 120,
       renderCell: cancelButton,
-    },
-  ];
-
-  const rows = [
-    {
-      roomID: "1F1A",
-      capacity: 10,
-      time: "10:00-12:30 05/08/2021",
-      id: "SHDYSB",
-      username: "Andy",
-      phone: "+61 412 345 678",
     },
   ];
 
@@ -151,10 +146,12 @@ export default function Booking(): JSX.Element {
       </Grid>
 
       <DataGrid
-        rows={rows}
+        rows={bookingList.map((booking) => {
+          return { ...booking, id: booking.bookingID };
+        })}
+        // rows={rows}
         columns={columns}
         pageSize={5}
-        rowsPerPageOptions={[5]}
         disableSelectionOnClick
       />
     </Grid>

@@ -13,7 +13,6 @@ const login = async (
   };
   return await fetch(`http://101.35.91.117:7894/springboot2webapp/login`, fetchOptions)
     .then((res) => {
-
       return res.json();
     })
     .catch(() => ({

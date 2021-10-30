@@ -10,6 +10,7 @@ import React from 'react';
 interface IAuthContext {
   loggedInUser: User | null | undefined;
   updateLoginContext: (data: AuthApiDataSuccess) => void;
+  token:string;
   logout: () => void;
 }
 
@@ -17,17 +18,20 @@ export const AuthContext = createContext<IAuthContext>({
   loggedInUser: undefined,
   updateLoginContext: () => null,
   logout: () => null,
+  token:'',
 });
 
 export const AuthProvider: FunctionComponent = ({ children }): JSX.Element => {
   // default undefined before loading, once loaded provide user or null if logged out
   const [loggedInUser, setLoggedInUser] = useState<User | null | undefined>();
+  const [token, setToken] = useState<string>('');
   const history = useHistory();
   const { updateSnackBarMessage } = useSnackBar();
 
   const updateLoginContext = useCallback(
     (data: AuthApiDataSuccess) => {
       setLoggedInUser(data.info);
+      setToken(data.token);
       if(data.info.library){
         history.push('/admin');
       }else{
@@ -66,7 +70,7 @@ export const AuthProvider: FunctionComponent = ({ children }): JSX.Element => {
   //   checkLoginWithCookies();
   // }, [updateLoginContext, history]);
 
-  return <AuthContext.Provider value={{ loggedInUser, updateLoginContext, logout }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ loggedInUser, updateLoginContext, logout,token }}>{children}</AuthContext.Provider>;
 };
 
 export function useAuth(): IAuthContext {

@@ -1,18 +1,15 @@
-export interface BookingsApiDataSuccess {
-  info: Booking[];
-  token: string;
-}
-
 export interface BookingsApiData {
   error?: string;
-  success?: BookingsApiDataSuccess;
+  success?: Booking[];
 }
 
 export interface Booking {
   capacity: number;
-  email: string;
-  phone: string;
+  userEmail: string;
+  userPhone: string;
   roomID: string;
-  startTime: Date;
-  endTime: Date;
+  startTime: string;
+  endTime: string;
+  username:string;
+  bookingID:string;
 }
