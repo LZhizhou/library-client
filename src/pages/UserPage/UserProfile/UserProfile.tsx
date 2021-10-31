@@ -1,4 +1,5 @@
 import {
+  Button,
   Paper,
   Typography,
 } from "@mui/material";
@@ -21,10 +22,7 @@ export default function UserProfile(): JSX.Element {
       <Typography className={classes.emailAndPhone}>
         {loggedInUser?.phone ?? "phone"}
       </Typography>
-      {/* <Typography>Library Name</Typography>
-      <Typography>Open Room</Typography>
-      <Typography>Total Room</Typography>
-      <Typography>Incoming booking</Typography> */}
+      <Button href="/login">Sign out</Button>
     </Paper>
   );
 }
