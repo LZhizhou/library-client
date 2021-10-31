@@ -1,4 +1,4 @@
-import { BookingsApiData } from "../../interface/BookingsApiData";
+import { AdminBookingsApiData } from "../../interface/Booking";
 import { FetchOptions } from "../../interface/FetchOptions";
 
 const incomingBookings = async ({
@@ -7,7 +7,7 @@ const incomingBookings = async ({
   startDate,
   endDate,
   token,
-}: IncomingBookingsRequest): Promise<BookingsApiData> => {
+}: IncomingBookingsRequest): Promise<AdminBookingsApiData> => {
   const fetchOptions: FetchOptions = {
     method: "POST",
     headers: { "Content-Type": "application/json" },

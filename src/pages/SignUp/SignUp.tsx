@@ -25,13 +25,12 @@ export default function Register(): JSX.Element {
       email,
       password,
       phone,
-      address
+      
     }: {
       email: string;
       password: string;
       username: string;
       phone: string;
-      address: string;
     },
     {
       setSubmitting,
@@ -40,10 +39,9 @@ export default function Register(): JSX.Element {
       password: string;
       username: string;
       phone: string;
-      address: string;
     }>
   ) => {
-    register(username, email, password, phone, address).then((data) => {
+    register({username, email, password, phone}).then((data) => {
       if (data.error) {
         console.error({ error: data.error });
         setSubmitting(false);

@@ -1,30 +1,49 @@
 import {
-  Box,
   Button,
+  Dialog,
   Grid,
-  InputAdornment,
   Select,
   SelectChangeEvent,
-  Stack,
   TextField,
-  TextFieldProps,
   Typography,
 } from "@mui/material";
 import useStyles from "../useStyles";
-import React, { useState } from "react";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import DesktopDateRangePicker from "@mui/lab/DesktopDateRangePicker";
-import { DateRange } from "@mui/lab/DateRangePicker";
+import { useEffect, useState } from "react";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { MenuItem } from "@material-ui/core";
+import { AdminLibrary, Library } from "../../../interface/Library";
+import getLibraryList from "../../../helpers/user/getLibraryList";
+import { useAuth } from "../../../context/useAuthContext";
+import getRoomList from "../../../helpers/admin/getRoomList";
+import { Room } from "../../../interface/RoomApiData";
+import bookRoom from "../../../helpers/user/bookRoom";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import DatePicker from "@mui/lab/DatePicker";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
 export default function BookRoom(): JSX.Element {
+  const [libraryList, setLibraryList] = useState<Library[]>([]);
+  const [roomList, setRoomList] = useState<Room[]>([]);
   const classes = useStyles();
-  const now = new Date();
-  const [dateRange, setDateRange] = React.useState<DateRange<Date>>([
-    now,
-    new Date(now.getFullYear(), now.getMonth() + 1, now.getDate()),
-  ]);
+  const { token, loggedInUser } = useAuth();
+  const [selectedLibraryID, setLibraryID] = useState<string>();
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+  const [bookDate, setBookDate] = useState<Date>(new Date());
+  useEffect(() => {
+    getLibraryList(token).then((response) => {
+      if (response.success) {
+        setLibraryList(response.success ?? []);
+      }
+    });
+  }, [token]);
+  useEffect(() => {
+    getRoomList({ token, libraryID: selectedLibraryID ?? "" }).then(
+      (response) => {
+        if (response.success) {
+          setRoomList(response.success ?? []);
+        }
+      }
+    );
+  }, [token]);
   const bookButton = (params: GridRenderCellParams) => {
     return (
       <strong>
@@ -32,17 +51,40 @@ export default function BookRoom(): JSX.Element {
           variant="contained"
           color="primary"
           size="small"
-          onClick={() => {}}
+          onClick={() => {
+            setDialogOpen(true);
+            // bookRoom({
+            //   username: loggedInUser?.username ?? "",
+            //   date: params.row.openingHours,
+            //   libraryID: selectedLibraryID ?? "",
+            //   roomID: params.row.roomID,
+            //   token: token,
+            // });
+          }}
         >
           Book
         </Button>
+        <Dialog open={dialogOpen} onClose={closeDialog}>
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <DatePicker
+              label="Date of booking"
+              value={bookDate}
+              onChange={(newValue) => {
+                if (newValue) {
+                  setBookDate(newValue);
+                }
+              }}
+              renderInput={(params) => <TextField {...params} />}
+            />
+          </LocalizationProvider>
+        </Dialog>
       </strong>
     );
   };
   const columns: GridColDef[] = [
     {
       field: "id",
-      headerName: "Room No.",
+      headerName: "Room ID",
       width: 130,
       editable: false,
       sortable: false,
@@ -56,11 +98,11 @@ export default function BookRoom(): JSX.Element {
       sortable: false,
     },
     {
-      field: "time",
-      headerName: "Time",
-      width: 180,
+      field: "openingHours",
+      headerName: "Opening hours",
       editable: false,
       sortable: false,
+      width: 250,
     },
     {
       field: "book",
@@ -71,35 +113,12 @@ export default function BookRoom(): JSX.Element {
       renderCell: bookButton,
     },
   ];
-  const [selectedLibrary, setLibrary] = useState<string>();
 
-  const rows = [
-    {
-      id: "1F1A",
-      capacity: 10,
-      time: "10:00-12:30 05/08/2021",
-    },
-  ];
-  const libraries = [
-    "Top Ryde Library",
-    "Oliver Hansen",
-    "Van Henry",
-    "April Tucker",
-    "Ralph Hubbard",
-    "Omar Alexander",
-    "Carlos Abbott",
-    "Miriam Wagner",
-    "Bradley Wilkerson",
-    "Virginia Andrews",
-    "Kelly Snyder",
-  ];
-  const handleLibraryChange = (
-    event: SelectChangeEvent<typeof selectedLibrary>
-  ) => {
-    const {
-      target: { value },
-    } = event;
-    setLibrary(value);
+  const handleLibraryChange = (event: SelectChangeEvent<string>) => {
+    setLibraryID(event.target.value);
+  };
+  const closeDialog = () => {
+    setDialogOpen(false);
   };
 
   return (
@@ -116,21 +135,21 @@ export default function BookRoom(): JSX.Element {
         <Grid item xs={8}>
           <Select
             onChange={handleLibraryChange}
-            value={selectedLibrary}
+            value={selectedLibraryID}
             label="Selected Library"
-            defaultValue={libraries[0]}
           >
-            {libraries.map((library) => (
-              <MenuItem key={library} value={library}>
-                {library}
+            {libraryList.map((library) => (
+              <MenuItem key={library.libraryID} value={library.libraryID}>
+                {library.name}
               </MenuItem>
             ))}
           </Select>
         </Grid>
       </Grid>
-
       <DataGrid
-        rows={rows}
+        rows={roomList.map((room) => {
+          return { ...room, id: room.roomID };
+        })}
         columns={columns}
         pageSize={5}
         rowsPerPageOptions={[5]}

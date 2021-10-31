@@ -8,12 +8,12 @@ import { DateRange } from "@mui/lab/DateRangePicker";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import incomingBookings from "../../../helpers/admin/IncomingBookings";
 import { useAuth } from "../../../context/useAuthContext";
-import { Booking } from "../../../interface/BookingsApiData";
+import { AdminBooking } from "../../../interface/Booking";
 import cancelBooking from "../../../helpers/admin/cancelBooking";
 export default function BookingTable(): JSX.Element {
   const classes = useStyles();
   const now = new Date();
-  const [bookingList, setBookingList] = useState<Booking[]>([]);
+  const [bookingList, setBookingList] = useState<AdminBooking[]>([]);
   const [dateRange, setDateRange] = React.useState<DateRange<Date>>([
     now,
     new Date(now.getFullYear(), now.getMonth() + 1, now.getDate()),
@@ -21,7 +21,7 @@ export default function BookingTable(): JSX.Element {
   const { loggedInUser, token } = useAuth();
   useEffect(() => {
     incomingBookings({
-      libraryID: loggedInUser?.library?.libraryId,
+      libraryID: loggedInUser?.library?.libraryID,
       username: loggedInUser?.username,
       startDate: dateRange[0]?.getDate.toString(),
       endDate: dateRange[1]?.getDate.toString(),

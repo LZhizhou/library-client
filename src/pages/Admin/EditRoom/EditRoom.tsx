@@ -1,37 +1,41 @@
 import {
-  Box,
   Button,
   Grid,
-  InputAdornment,
-  Stack,
   TextField,
-  TextFieldProps,
   Typography,
 } from "@mui/material";
 import useStyles from "./useStyles";
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import DesktopDateRangePicker from "@mui/lab/DesktopDateRangePicker";
-import { DateRange } from "@mui/lab/DateRangePicker";
 import MobileDatePicker from "@mui/lab/MobileDatePicker";
 import MobileTimePicker from "@mui/lab/MobileTimePicker";
+
 import {
   DataGrid,
   GridColDef,
   GridRenderCellParams,
-  GridValueGetterParams,
 } from "@mui/x-data-grid";
+import getRoomList from "../../../helpers/admin/getRoomList";
+import { useAuth } from "../../../context/useAuthContext";
+import { Room } from "../../../interface/RoomApiData";
 export default function EditRoom(): JSX.Element {
   const classes = useStyles();
-  const now = new Date();
   const tempOpenUntill = new Date(2021, 11, 31);
   const openTime = new Date(2021, 11, 31, 8);
   const closeTime = new Date(2021, 11, 31, 22);
-  const [value, setValue] = React.useState<DateRange<Date>>([
-    now,
-    new Date(now.getFullYear(), now.getMonth() + 1, now.getDate()),
-  ]);
+  const {loggedInUser,token}=useAuth();
+  const [roomList,setRoomList] = useState<Room[]>([]);
+  useEffect(() => {
+    getRoomList({
+      libraryID: loggedInUser?.library?.libraryID??'',
+      token: token,
+    }).then((response) => {
+      if (response.success) {
+        setRoomList(response.success??[]);
+      }
+    });
+  }, [loggedInUser]);
   const updateButton = (params: GridRenderCellParams) => {
     return (
       <strong>
@@ -51,7 +55,7 @@ export default function EditRoom(): JSX.Element {
       return (
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <MobileDatePicker
-            value={tempOpenUntill}
+            value={params.row.openUntill}
             onChange={(newValue) => {}}
             renderInput={(params) => <TextField {...params} />}
           />
@@ -107,15 +111,14 @@ export default function EditRoom(): JSX.Element {
       renderCell: datePicker,
     },
     {
-      field: "open",
+      field: "available",
       headerName: "Open/Close",
-      type: "boolean",
       width: 130,
       editable: false,
       sortable: false,
     },
     {
-      field: "hours",
+      field: "openingHours",
       headerName: "Opening hours",
       editable: false,
       sortable: false,
@@ -133,18 +136,6 @@ export default function EditRoom(): JSX.Element {
     },
   ];
 
-  const rows = [
-    {
-      id: "1F1A",
-      capacity: 10,
-      open: true,
-    },
-    {
-      id: "3D13",
-      capacity: 16,
-      open: false,
-    },
-  ];
 
   return (
     <Grid
@@ -158,7 +149,7 @@ export default function EditRoom(): JSX.Element {
       </Grid>
 
       <DataGrid
-        rows={rows}
+        rows={roomList.map((room)=>{return {...room,id:room.roomID}})}
         columns={columns}
         pageSize={5}
         rowsPerPageOptions={[5]}

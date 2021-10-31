@@ -1,51 +1,25 @@
-import {
-  Box,
-  Button,
-  Grid,
-  InputAdornment,
-  Stack,
-  TextField,
-  TextFieldProps,
-  Typography,
-} from "@mui/material";
+import { Button, Grid, TextField, Typography } from "@mui/material";
 import useStyles from "./useStyles";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DesktopDateRangePicker from "@mui/lab/DesktopDateRangePicker";
 import { DateRange } from "@mui/lab/DateRangePicker";
-import MobileDatePicker from "@mui/lab/MobileDatePicker";
-import MobileTimePicker from "@mui/lab/MobileTimePicker";
-import {
-  DataGrid,
-  GridColDef,
-  GridRenderCellParams,
-  GridValueGetterParams,
-} from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
+import { useAuth } from "../../../context/useAuthContext";
+import getMyBookingList from "../../../helpers/user/getMyBookingList";
+import { AdminBooking } from "../../../interface/Booking";
+import userCancelBooking from "../../../helpers/user/userCancelBooking";
 export default function ViewBookings(): JSX.Element {
+  const { loggedInUser, token } = useAuth();
   const classes = useStyles();
   const now = new Date();
-  const tempOpenUntill = new Date(2021, 11, 31);
-  const openTime = new Date(2021, 11, 31, 8);
-  const closeTime = new Date(2021, 11, 31, 22);
+  const [bookingList, setBookingList] = useState<AdminBooking[]>([]);
   const [dateRange, setDateRange] = React.useState<DateRange<Date>>([
     now,
     new Date(now.getFullYear(), now.getMonth() + 1, now.getDate()),
   ]);
-  const updateButton = (params: GridRenderCellParams) => {
-    return (
-      <strong>
-        <Button
-          variant="contained"
-          color="primary"
-          size="small"
-          onClick={() => {}}
-        >
-          Update
-        </Button>
-      </strong>
-    );
-  };
+
   const cancelButton = (params: GridRenderCellParams) => {
     return (
       <strong>
@@ -53,42 +27,25 @@ export default function ViewBookings(): JSX.Element {
           variant="contained"
           color="primary"
           size="small"
-          onClick={() => {}}
+          onClick={() => {
+            userCancelBooking({ reservationID: params.row.id, token });
+          }}
         >
           Cancel
         </Button>
       </strong>
     );
   };
-  const editButton = (params: GridRenderCellParams) => {
-    return (
-      <strong>
-        <Button
-          variant="contained"
-          color="primary"
-          size="small"
-          onClick={() => {}}
-        >
-          Edit
-        </Button>
-      </strong>
-    );
-  };
+
   const columns: GridColDef[] = [
     {
-      field: "library",
-      headerName: "Library",
+      field: "id",
+      headerName: "Booking Ref",
       width: 130,
       editable: false,
       sortable: false,
     },
-    {
-      field: "roomId",
-      headerName: "Room ID",
-      width: 110,
-      editable: false,
-      sortable: false,
-    },
+    { field: "roomID", headerName: "Room ID", width: 110, sortable: false },
     {
       field: "capacity",
       headerName: "Capacity",
@@ -98,19 +55,20 @@ export default function ViewBookings(): JSX.Element {
       sortable: false,
     },
     {
-      field: "time",
-      headerName: "Time",
-      width: 180,
+      field: "date",
+      headerName: "Date",
+      width: 150,
       editable: false,
       sortable: false,
     },
     {
-      field: "id",
-      headerName: "BookingRef",
-      width: 130,
+      field: "time",
+      headerName: "Time",
+      width: 150,
       editable: false,
       sortable: false,
     },
+
     {
       field: "cancel",
       headerName: "Cancel",
@@ -119,26 +77,20 @@ export default function ViewBookings(): JSX.Element {
       width: 120,
       renderCell: cancelButton,
     },
-    {
-      field: "edit",
-      headerName: "Edit",
-      editable: false,
-      sortable: false,
-      width: 120,
-      renderCell: editButton,
-    },
   ];
-
-  const rows = [
-    {
-      id: "SHDYSB",
-      capacity: 10,
-      roomId:"1F1A",
-      library:"Top Ryde Library",
-      time:"10:00-12:30 05/08/2021" 
-    },
-  ];
-
+  useEffect(() => {
+    getMyBookingList({
+      libraryID: loggedInUser?.library?.libraryID,
+      username: loggedInUser?.username,
+      startDate: dateRange[0]?.getDate.toString(),
+      endDate: dateRange[1]?.getDate.toString(),
+      token: token,
+    }).then((response) => {
+      if (response.success) {
+        setBookingList(response.success);
+      }
+    });
+  }, [loggedInUser, dateRange]);
   return (
     <Grid
       container
@@ -148,7 +100,7 @@ export default function ViewBookings(): JSX.Element {
     >
       <Grid item container direction={"row"}>
         <Grid item xs={4}>
-          <Typography variant={"h5"}>Room List</Typography>
+          <Typography variant={"h5"}>My Booking</Typography>
         </Grid>
         <Grid item xs={8}>
           <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -173,7 +125,9 @@ export default function ViewBookings(): JSX.Element {
         </Grid>
       </Grid>
       <DataGrid
-        rows={rows}
+        rows={bookingList.map((booking) => {
+          return { ...booking, id: booking.bookingID };
+        })}
         columns={columns}
         pageSize={5}
         rowsPerPageOptions={[5]}

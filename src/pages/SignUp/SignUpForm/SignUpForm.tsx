@@ -21,7 +21,6 @@ interface Props {
       password: string;
       username: string;
       phone: string;
-      address:string;
     },
     {
       setStatus,
@@ -31,7 +30,6 @@ interface Props {
       password: string;
       username: string;
       phone: string;
-      address:string;
     }>
   ) => void;
 }
@@ -48,7 +46,6 @@ const SignUpForm = ({ handleSubmit }: Props): JSX.Element => {
         password: "",
         username: "",
         phone: "",
-        address:"",
       }}
       validationSchema={Yup.object().shape({
         username: Yup.string()
@@ -64,7 +61,6 @@ const SignUpForm = ({ handleSubmit }: Props): JSX.Element => {
         phone: Yup.string()
           .required("Phone is required")
           .matches(phoneRegExp, "Phone number is not vaild"),
-        address:Yup.string().required("Address is required")
       })}
       onSubmit={handleSubmit}
     >
@@ -166,26 +162,6 @@ const SignUpForm = ({ handleSubmit }: Props): JSX.Element => {
             helperText={touched.phone ? errors.phone : ""}
             error={touched.phone && Boolean(errors.phone)}
             value={values.phone}
-            onChange={handleChange}
-          />
-                    <TextField
-            id="address"
-            variant="outlined"
-            fullWidth
-            margin="normal"
-            placeholder="Enter your address"
-            InputLabelProps={{
-              shrink: true,
-            }}
-            InputProps={{
-              classes: { input: classes.inputs },
-            }}
-            name="address"
-            autoComplete="street-address"
-            autoFocus
-            helperText={touched.address ? errors.address : ""}
-            error={touched.address && Boolean(errors.address)}
-            value={values.address}
             onChange={handleChange}
           />
           <Box textAlign="center">
