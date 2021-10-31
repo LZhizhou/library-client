@@ -23,8 +23,8 @@ export default function UserPage(): JSX.Element {
           value={tabIndex}
           onChange={handleChange}
         >
-          <Tab label="Bookings" />
-          <Tab label="Add/Edit Room" />
+          <Tab label="Book" />
+          <Tab label="View Bookings" />
         </Tabs>
         <Grid item>
           {tabIndex === 0 && <BookRoom />}

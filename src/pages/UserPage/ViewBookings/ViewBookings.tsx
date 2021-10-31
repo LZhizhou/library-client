@@ -8,13 +8,13 @@ import { DateRange } from "@mui/lab/DateRangePicker";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { useAuth } from "../../../context/useAuthContext";
 import getMyBookingList from "../../../helpers/user/getMyBookingList";
-import { AdminBooking } from "../../../interface/Booking";
+import { UserBooking } from "../../../interface/Booking";
 import userCancelBooking from "../../../helpers/user/userCancelBooking";
 export default function ViewBookings(): JSX.Element {
   const { loggedInUser, token } = useAuth();
   const classes = useStyles();
   const now = new Date();
-  const [bookingList, setBookingList] = useState<AdminBooking[]>([]);
+  const [bookingList, setBookingList] = useState<UserBooking[]>([]);
   const [dateRange, setDateRange] = React.useState<DateRange<Date>>([
     now,
     new Date(now.getFullYear(), now.getMonth() + 1, now.getDate()),
@@ -80,11 +80,10 @@ export default function ViewBookings(): JSX.Element {
   ];
   useEffect(() => {
     getMyBookingList({
-      libraryID: loggedInUser?.library?.libraryID,
-      username: loggedInUser?.username,
-      startDate: dateRange[0]?.getDate.toString(),
-      endDate: dateRange[1]?.getDate.toString(),
-      token: token,
+      username: loggedInUser?.username??'',
+      startTime: dateRange[0]?.toLocaleDateString().replaceAll('/','-')??'',
+      endTime: dateRange[1]?.toLocaleDateString().replaceAll('/','-')??'',
+      token
     }).then((response) => {
       if (response.success) {
         setBookingList(response.success);
@@ -126,7 +125,7 @@ export default function ViewBookings(): JSX.Element {
       </Grid>
       <DataGrid
         rows={bookingList.map((booking) => {
-          return { ...booking, id: booking.bookingID };
+          return { ...booking, id: booking.reservationID };
         })}
         columns={columns}
         pageSize={5}

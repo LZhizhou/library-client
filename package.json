@@ -39,7 +39,6 @@
     "use-debounce": "^6.0.0",
     "yup": "^0.32.8"
   },
-  "proxy": "http://127.0.0.1:7894/springboot2webapp",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",

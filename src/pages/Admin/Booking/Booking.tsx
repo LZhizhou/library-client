@@ -23,8 +23,8 @@ export default function BookingTable(): JSX.Element {
     incomingBookings({
       libraryID: loggedInUser?.library?.libraryID,
       username: loggedInUser?.username,
-      startDate: dateRange[0]?.getDate.toString(),
-      endDate: dateRange[1]?.getDate.toString(),
+      startDate: dateRange[0]?.toLocaleDateString().replaceAll("/","-"),
+      endDate: dateRange[1]?.toLocaleDateString().replaceAll("/","-"),
       token: token,
     }).then((response) => {
       if (response.success) {

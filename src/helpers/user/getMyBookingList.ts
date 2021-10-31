@@ -2,17 +2,11 @@ import { AdminBookingsApiData, UserBooking, UserBookingsApiData } from "../../in
 import { FetchOptions } from "../../interface/FetchOptions";
 import { IncomingBookingsRequest } from "../admin/IncomingBookings";
 
-const getMyBookingList = async ({
-    libraryID,
-    username,
-    startDate,
-    endDate,
-    token,
-  }: IncomingBookingsRequest): Promise<UserBookingsApiData> => {
+const getMyBookingList = async (request: GetMyBookingListRequest): Promise<UserBookingsApiData> => {
     const fetchOptions: FetchOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, libraryID, startDate, endDate, token }),
+      body: JSON.stringify(request),
       credentials: "omit",
     };
     return await fetch(
@@ -27,3 +21,10 @@ const getMyBookingList = async ({
       }));
   };
   export default getMyBookingList;
+
+  export interface GetMyBookingListRequest {
+    username: string;
+    startTime: string;
+    endTime: string;
+    token: string;
+  }

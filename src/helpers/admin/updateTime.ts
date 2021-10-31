@@ -1,18 +1,15 @@
 import { FetchOptions } from "../../interface/FetchOptions";
-import { RoomApiData } from "../../interface/RoomApiData";
+import { SuccessFailResponse } from "../../interface/SuccessFailResponse";
 
-const getRoomList = async ({
-    libraryID,
-    token,
-  }: GetRoomListRequest): Promise<RoomApiData> => {
+const updateTime = async (request: UpdateTimeRequest): Promise<SuccessFailResponse> => {
     const fetchOptions: FetchOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ libraryID, token }),
+      body: JSON.stringify(request),
       credentials: "omit",
     };
     return await fetch(
-      `http://101.35.91.117:7894/springboot2webapp/admin/roomList`,
+      `http://101.35.91.117:7894/springboot2webapp/admin/setLibTime`,
       fetchOptions
     )
       .then((res) => {
@@ -22,9 +19,10 @@ const getRoomList = async ({
         error: "Unable to connect to server. Please try again",
       }));
   };
-  export default getRoomList;
-  export interface GetRoomListRequest{
-      token:string,
+  export default updateTime;
+  export interface UpdateTimeRequest{
       libraryID:string,
+      startTime:string,
+      endTime:string,
+      token:string
   }
-

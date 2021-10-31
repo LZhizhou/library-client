@@ -1,15 +1,26 @@
 
   
-  export interface RoomApiData {
+  export interface AdminRoomApiData {
     error?: string;
-    success?: Room[];
+    success?: AdminRoom[];
   }
   
-  export interface Room {
+  export interface AdminRoom {
+    roomID: string,
+    roomName:string;
+    capacity: number;
+    openStatus:string;
+    availableTime:string;
+  }
+
+  export interface UserRoom {
     roomID: string,
     capacity: number;
-    openUntil:string;
-    available:string;
-    openingHours:String,
+    openStatus:string;
+    availableTime:string;
   }
-  
+
+  export interface UserRoomApiData {
+    error?: string;
+    success?: AdminRoom[];
+  }

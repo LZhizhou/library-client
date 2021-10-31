@@ -24,5 +24,5 @@ export interface UserBooking {
 
 export interface UserBookingsApiData {
   error?: string;
-  success?: AdminBooking[];
+  success?: UserBooking[];
 }

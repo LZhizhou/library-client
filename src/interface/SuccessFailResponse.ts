@@ -1,3 +1,4 @@
 export interface SuccessFailResponse {
-  success: string;
+  success?: string;
+  error?:string
 }
