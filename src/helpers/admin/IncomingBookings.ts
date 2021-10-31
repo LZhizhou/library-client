@@ -3,7 +3,6 @@ import { FetchOptions } from "../../interface/FetchOptions";
 
 const incomingBookings = async ({
   libraryID,
-  username,
   startDate,
   endDate,
   token,
@@ -11,7 +10,7 @@ const incomingBookings = async ({
   const fetchOptions: FetchOptions = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, libraryID, startDate, endDate, token }),
+    body: JSON.stringify({  libraryID, startDate, endDate, token }),
     credentials: "omit",
   };
   return await fetch(

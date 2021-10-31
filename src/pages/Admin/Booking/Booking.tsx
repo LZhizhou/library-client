@@ -10,28 +10,32 @@ import incomingBookings from "../../../helpers/admin/IncomingBookings";
 import { useAuth } from "../../../context/useAuthContext";
 import { AdminBooking } from "../../../interface/Booking";
 import cancelBooking from "../../../helpers/admin/cancelBooking";
+import moment from 'moment';
+import { useSnackBar } from "../../../context/useSnackbarContext";
 export default function BookingTable(): JSX.Element {
   const classes = useStyles();
   const now = new Date();
   const [bookingList, setBookingList] = useState<AdminBooking[]>([]);
-  const [dateRange, setDateRange] = React.useState<DateRange<Date>>([
-    now,
+  const [dateRange, setDateRange] = useState<DateRange<Date>>([
+    new Date(now.getFullYear(), now.getMonth() -1, now.getDate()),
     new Date(now.getFullYear(), now.getMonth() + 1, now.getDate()),
   ]);
+  const [count,setCount]=useState<number>(0);
   const { loggedInUser, token } = useAuth();
+  const {updateSnackBarMessage} = useSnackBar();
   useEffect(() => {
     incomingBookings({
       libraryID: loggedInUser?.library?.libraryID,
       username: loggedInUser?.username,
-      startDate: dateRange[0]?.toLocaleDateString().replaceAll("/","-"),
-      endDate: dateRange[1]?.toLocaleDateString().replaceAll("/","-"),
+      startDate: moment(dateRange[0]).format("YYYY-MM-DD"),
+      endDate: moment(dateRange[1]).format("YYYY-MM-DD"),
       token: token,
     }).then((response) => {
       if (response.success) {
         setBookingList(response.success);
       }
     });
-  }, [loggedInUser, dateRange]);
+  }, [count,loggedInUser, dateRange]);
   const cancelButton = (params: GridRenderCellParams) => {
     return (
       <strong>
@@ -40,7 +44,15 @@ export default function BookingTable(): JSX.Element {
           color="primary"
           size="small"
           onClick={() => {
-            cancelBooking({ token, reservationID: params.row.bookingID });
+            cancelBooking({ token, reservationID: params.row.reservationID }).then((response)=>{
+              if(response.success){
+                updateSnackBarMessage("booking cancelled");
+              }else{
+                updateSnackBarMessage("failed to cancel booking: "+response.error);
+              }
+            }).finally(()=>{
+              setCount(count+1);
+            })
           }}
         >
           Cancel
@@ -88,14 +100,14 @@ export default function BookingTable(): JSX.Element {
       width: 120,
     },
     {
-      field: "userPhone",
+      field: "phone",
       headerName: "phone No.",
       editable: false,
       sortable: false,
       width: 130,
     },
     {
-      field: "userEmail",
+      field: "email",
       headerName: "Eamil",
       editable: false,
       sortable: false,
@@ -147,9 +159,8 @@ export default function BookingTable(): JSX.Element {
 
       <DataGrid
         rows={bookingList.map((booking) => {
-          return { ...booking, id: booking.bookingID };
+          return { ...booking, id: booking.reservationID };
         })}
-        // rows={rows}
         columns={columns}
         pageSize={5}
         disableSelectionOnClick

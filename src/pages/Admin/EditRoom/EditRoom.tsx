@@ -1,4 +1,11 @@
-import { Button, Grid, Typography } from "@mui/material";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  Grid,
+  Typography,
+} from "@mui/material";
 import useStyles from "./useStyles";
 import { useCallback, useEffect, useState } from "react";
 
@@ -11,8 +18,12 @@ import {
 } from "@mui/x-data-grid";
 import adminGetRoomList from "../../../helpers/admin/adminGetRoomList";
 import { useAuth } from "../../../context/useAuthContext";
-import { AdminRoom } from "../../../interface/RoomApiData";
 import updateTime from "../../../helpers/admin/updateTime";
+import { useSnackBar } from "../../../context/useSnackbarContext";
+import AddRoomForm from "./AddRoomForm/AddRoomForm";
+import { FormikHelpers } from "formik";
+import addRoom from "../../../helpers/admin/addRoom";
+import { number } from "yup/lib/locale";
 
 export interface AdminRoomGrid {
   id: string;
@@ -30,6 +41,9 @@ export default function EditRoom(): JSX.Element {
   const classes = useStyles();
   const { loggedInUser, token } = useAuth();
   const [roomList, setRoomList] = useState<AdminRoomGrid[]>([]);
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+  const { updateSnackBarMessage } = useSnackBar();
+  const [count,setCount]=useState<number>(0);
   useEffect(() => {
     adminGetRoomList({
       libraryID: loggedInUser?.library?.libraryID ?? "",
@@ -49,7 +63,7 @@ export default function EditRoom(): JSX.Element {
         );
       }
     });
-  }, [loggedInUser]);
+  }, [loggedInUser,count]);
   const updateButton = (params: GridRenderCellParams) => {
     return (
       <strong>
@@ -62,10 +76,13 @@ export default function EditRoom(): JSX.Element {
               startTime: params.row.availableTime.split("-")[0],
               endTime: params.row.availableTime.split("-")[1],
               token,
-              libraryID:loggedInUser?.library?.libraryID??''
-            }).then((response)=>{
-              if(response.success){
-                
+              libraryID: loggedInUser?.library?.libraryID ?? "",
+            }).then((response) => {
+              if (response.success) {
+                updateSnackBarMessage("update successfully!");
+                setCount(count+1);
+              } else {
+                updateSnackBarMessage("update failed: " + response.error);
               }
             });
           }}
@@ -146,6 +163,54 @@ export default function EditRoom(): JSX.Element {
     },
     []
   );
+  const addRoomClick = () => {
+    setDialogOpen(true);
+  };
+  const closeDialog = () => {
+    setDialogOpen(false);
+  };
+  const handleSubmit = (
+    {
+      roomID,
+      roomName,
+      availableTime,
+      capacity,
+    }: {
+      roomID: string;
+      roomName: string;
+      availableTime: string;
+      capacity: number;
+    },
+    {
+      setSubmitting,
+    }: FormikHelpers<{
+      roomID: string;
+      roomName: string;
+      availableTime: string;
+      capacity: number;
+    }>
+  ) => {
+    addRoom({
+      roomID,
+      roomName,
+      availableTime,
+      capacity,
+      openStatus: "open",
+    },token).then((data) => {
+      if (data.error) {
+        console.error({ error: data.error });
+        updateSnackBarMessage(data.error);
+      } else if (data.success) {
+      } else {
+        // should not get here from backend but this catch is for an unknown issue
+        console.error({ data });
+        updateSnackBarMessage("An unexpected error occurred. Please try again");
+      }
+    }).finally(()=>{
+      setDialogOpen(false);
+      setCount(count+1);
+    });
+  };
   return (
     <Grid
       container
@@ -153,19 +218,31 @@ export default function EditRoom(): JSX.Element {
       className={classes.root}
       direction={"column"}
     >
-      <Grid item xs={4}>
-        <Typography variant={"h5"}>Room List</Typography>
+      <Grid item container direction={"row"}>
+        <Grid item xs={4}>
+          <Typography variant={"h5"}>Room List</Typography>
+        </Grid>
+        <Grid item xs={4}>
+          <Button variant="contained" color="primary" onClick={addRoomClick}>
+            Add room
+          </Button>
+        </Grid>
       </Grid>
 
       <DataGrid
         rows={roomList}
         columns={columns}
-        pageSize={5}
         rowsPerPageOptions={[5]}
         disableSelectionOnClick
         onEditRowsModelChange={handleEditRowsModelChange}
         editRowsModel={editRowsModel}
       />
+      <Dialog open={dialogOpen} onClose={closeDialog}>
+        <DialogContent>
+          <AddRoomForm handleSubmit={handleSubmit}/>
+        </DialogContent>
+
+      </Dialog>
     </Grid>
   );
 }

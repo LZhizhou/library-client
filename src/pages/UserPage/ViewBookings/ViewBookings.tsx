@@ -10,13 +10,14 @@ import { useAuth } from "../../../context/useAuthContext";
 import getMyBookingList from "../../../helpers/user/getMyBookingList";
 import { UserBooking } from "../../../interface/Booking";
 import userCancelBooking from "../../../helpers/user/userCancelBooking";
+import moment from "moment";
 export default function ViewBookings(): JSX.Element {
   const { loggedInUser, token } = useAuth();
   const classes = useStyles();
   const now = new Date();
   const [bookingList, setBookingList] = useState<UserBooking[]>([]);
   const [dateRange, setDateRange] = React.useState<DateRange<Date>>([
-    now,
+    new Date(now.getFullYear(), now.getMonth() - 1, now.getDate()),
     new Date(now.getFullYear(), now.getMonth() + 1, now.getDate()),
   ]);
 
@@ -81,15 +82,15 @@ export default function ViewBookings(): JSX.Element {
   useEffect(() => {
     getMyBookingList({
       username: loggedInUser?.username??'',
-      startTime: dateRange[0]?.toLocaleDateString().replaceAll('/','-')??'',
-      endTime: dateRange[1]?.toLocaleDateString().replaceAll('/','-')??'',
+      startTime: moment(dateRange[0]).format("YYYY-MM-DD"),
+      endTime: moment(dateRange[1]).format("YYYY-MM-DD"),
       token
     }).then((response) => {
       if (response.success) {
         setBookingList(response.success);
       }
     });
-  }, [loggedInUser, dateRange]);
+  }, [loggedInUser, dateRange,token]);
   return (
     <Grid
       container

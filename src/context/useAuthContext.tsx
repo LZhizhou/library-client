@@ -1,11 +1,10 @@
-import { useState, useContext, createContext, FunctionComponent, useEffect, useCallback } from 'react';
+import { useState, useContext, createContext, FunctionComponent, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
-import { AuthApiData, AuthApiDataSuccess } from '../interface/AuthApiData';
+import { AuthApiDataSuccess } from '../interface/AuthApiData';
 import { User } from '../interface/User';
 // import loginWithCookies from '../helpers/auth/loginWithCookies';
 import logoutAPI from '../helpers/auth/logout';
 import { useSnackBar } from '../context/useSnackbarContext';
-import React from 'react';
 
 interface IAuthContext {
   loggedInUser: User | null | undefined;

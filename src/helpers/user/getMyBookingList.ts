@@ -1,6 +1,5 @@
-import { AdminBookingsApiData, UserBooking, UserBookingsApiData } from "../../interface/Booking";
+import { UserBookingsApiData } from "../../interface/Booking";
 import { FetchOptions } from "../../interface/FetchOptions";
-import { IncomingBookingsRequest } from "../admin/IncomingBookings";
 
 const getMyBookingList = async (request: GetMyBookingListRequest): Promise<UserBookingsApiData> => {
     const fetchOptions: FetchOptions = {

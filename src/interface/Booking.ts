@@ -5,13 +5,13 @@ export interface AdminBookingsApiData {
 
 export interface AdminBooking {
   capacity: number;
-  userEmail: string;
-  userPhone: string;
+  email: string;
+  phone: string;
   roomID: string;
   startTime: string;
   endTime: string;
   username:string;
-  bookingID:string;
+  reservationID:string;
 }
 export interface UserBooking {
   roomID: string;

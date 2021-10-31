@@ -1,10 +1,10 @@
-import { CssBaseline, Grid, Paper, Tab, Tabs } from "@mui/material";
+import { CssBaseline, Grid, Tab, Tabs } from "@mui/material";
 import React, { useState } from "react";
 import UserProfile from "./UserProfile/UserProfile";
-import Booking from "./BookRoom/BookRoom";
 import EditRoom from "./ViewBookings/ViewBookings";
 import useStyles from "./useStyles";
 import BookRoom from "./BookRoom/BookRoom";
+import ViewBookings from "./ViewBookings/ViewBookings";
 
 export default function UserPage(): JSX.Element {
   const classes = useStyles();
@@ -28,7 +28,7 @@ export default function UserPage(): JSX.Element {
         </Tabs>
         <Grid item>
           {tabIndex === 0 && <BookRoom />}
-          {tabIndex === 1 && <EditRoom />}
+          {tabIndex === 1 && <ViewBookings />}
         </Grid>
       </Grid>
     </Grid>

@@ -13,10 +13,9 @@ import useStyles from "../useStyles";
 import { useEffect, useState } from "react";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { MenuItem } from "@material-ui/core";
-import { AdminLibrary, UserLibrary } from "../../../interface/Library";
+import { UserLibrary } from "../../../interface/Library";
 import getLibraryList from "../../../helpers/user/getLibraryList";
 import { useAuth } from "../../../context/useAuthContext";
-import adminGetRoomList from "../../../helpers/admin/adminGetRoomList";
 import { AdminRoom } from "../../../interface/RoomApiData";
 import bookRoom from "../../../helpers/user/bookRoom";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
@@ -24,12 +23,14 @@ import DatePicker from "@mui/lab/DatePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import { useSnackBar } from "../../../context/useSnackbarContext";
 import userGetRoomList from "../../../helpers/user/userGetRoomList";
+import moment from "moment";
 export default function BookRoom(): JSX.Element {
   const [libraryList, setLibraryList] = useState<UserLibrary[]>([]);
   const [roomList, setRoomList] = useState<AdminRoom[]>([]);
   const classes = useStyles();
   const { token, loggedInUser } = useAuth();
   const [selectedLibraryID, setLibraryID] = useState<string>("");
+  const [selectedRoomID, setRoomID] = useState<string>("");
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [bookDate, setBookDate] = useState<Date>(new Date());
   const { updateSnackBarMessage } = useSnackBar();
@@ -64,50 +65,13 @@ export default function BookRoom(): JSX.Element {
           color="primary"
           size="small"
           onClick={() => {
+            setRoomID(params.row.roomID);
             setDialogOpen(true);
           }}
         >
           Book
         </Button>
-        <Dialog open={dialogOpen} onClose={closeDialog}>
-          <DialogContent>
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
-              <DatePicker
-                label="Date of booking"
-                minDate={new Date()}
-                value={bookDate}
-                onChange={(newValue) => {
-                  if (newValue) {
-                    setBookDate(newValue);
-                  }
-                }}
-                renderInput={(params) => <TextField {...params} />}
-              />
-            </LocalizationProvider>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={closeDialog}>Cancel</Button>
-            <Button
-              onClick={() => {
-                bookRoom({
-                  username: loggedInUser?.username ?? "",
-                  date: bookDate.toLocaleDateString().replaceAll('/','-'),
-                  libraryID: selectedLibraryID ?? "",
-                  roomID: params.row.roomID,
-                  token,
-                }).then((response) => {
-                  if (response.success) {
-                    updateSnackBarMessage("booked successfully");
-                  } else {
-                    updateSnackBarMessage("book failed: " + response.error);
-                  }
-                }).finally(closeDialog);
-              }}
-            >
-              Book
-            </Button>
-          </DialogActions>
-        </Dialog>
+
       </strong>
     );
   };
@@ -192,6 +156,45 @@ export default function BookRoom(): JSX.Element {
         rowsPerPageOptions={[5]}
         disableSelectionOnClick
       />
+              <Dialog open={dialogOpen} onClose={closeDialog}>
+          <DialogContent>
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <DatePicker
+                label="Date of booking"
+                minDate={new Date()}
+                value={bookDate}
+                onChange={(newValue) => {
+                  if (newValue) {
+                    setBookDate(newValue);
+                  }
+                }}
+                renderInput={(params) => <TextField {...params} />}
+              />
+            </LocalizationProvider>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={closeDialog}>Cancel</Button>
+            <Button
+              onClick={() => {
+                bookRoom({
+                  username: loggedInUser?.username ?? "",
+                  date: moment(bookDate).format("YYYY-MM-DD"),
+                  libraryID: selectedLibraryID ?? "",
+                  roomID: selectedRoomID,
+                  token,
+                }).then((response) => {
+                  if (response.success) {
+                    updateSnackBarMessage("booked successfully");
+                  } else {
+                    updateSnackBarMessage("book failed: " + response.error);
+                  }
+                }).finally(closeDialog);
+              }}
+            >
+              Book
+            </Button>
+          </DialogActions>
+        </Dialog>
     </Grid>
   );
 }

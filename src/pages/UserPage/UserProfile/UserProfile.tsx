@@ -1,15 +1,7 @@
 import {
-  Box,
-  Button,
-  CssBaseline,
-  Grid,
   Paper,
-  Tab,
-  Tabs,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
-import { styled } from "@mui/material/styles";
 
 import useStyles from "./useStyles";
 import { useAuth } from "../../../context/useAuthContext";
