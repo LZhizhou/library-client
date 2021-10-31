@@ -10,19 +10,19 @@ import incomingBookings from "../../../helpers/admin/IncomingBookings";
 import { useAuth } from "../../../context/useAuthContext";
 import { AdminBooking } from "../../../interface/Booking";
 import cancelBooking from "../../../helpers/admin/cancelBooking";
-import moment from 'moment';
+import moment from "moment";
 import { useSnackBar } from "../../../context/useSnackbarContext";
 export default function BookingTable(): JSX.Element {
   const classes = useStyles();
   const now = new Date();
   const [bookingList, setBookingList] = useState<AdminBooking[]>([]);
   const [dateRange, setDateRange] = useState<DateRange<Date>>([
-    new Date(now.getFullYear(), now.getMonth() -1, now.getDate()),
+    new Date(now.getFullYear(), now.getMonth() - 1, now.getDate()),
     new Date(now.getFullYear(), now.getMonth() + 1, now.getDate()),
   ]);
-  const [count,setCount]=useState<number>(0);
+  const [count, setCount] = useState<number>(0);
   const { loggedInUser, token } = useAuth();
-  const {updateSnackBarMessage} = useSnackBar();
+  const { updateSnackBarMessage } = useSnackBar();
   useEffect(() => {
     incomingBookings({
       libraryID: loggedInUser?.library?.libraryID,
@@ -35,7 +35,7 @@ export default function BookingTable(): JSX.Element {
         setBookingList(response.success);
       }
     });
-  }, [count,loggedInUser, dateRange]);
+  }, [count, loggedInUser, dateRange]);
   const cancelButton = (params: GridRenderCellParams) => {
     return (
       <strong>
@@ -44,15 +44,19 @@ export default function BookingTable(): JSX.Element {
           color="primary"
           size="small"
           onClick={() => {
-            cancelBooking({ token, reservationID: params.row.reservationID }).then((response)=>{
-              if(response.success){
-                updateSnackBarMessage("booking cancelled");
-              }else{
-                updateSnackBarMessage("failed to cancel booking: "+response.error);
-              }
-            }).finally(()=>{
-              setCount(count+1);
-            })
+            cancelBooking({ token, reservationID: params.row.reservationID })
+              .then((response) => {
+                if (response.success) {
+                  updateSnackBarMessage("booking cancelled");
+                } else {
+                  updateSnackBarMessage(
+                    "failed to cancel booking: " + response.error
+                  );
+                }
+              })
+              .finally(() => {
+                setCount(count + 1);
+              });
           }}
         >
           Cancel

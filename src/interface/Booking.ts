@@ -16,9 +16,8 @@ export interface AdminBooking {
 export interface UserBooking {
   roomID: string;
   libraryID:string,
-  capacity: number;
-  date:string,
-  time:string,
+  startTime:string,
+  endTime:string
   reservationID:string,
 }
 

@@ -11,6 +11,7 @@ import getMyBookingList from "../../../helpers/user/getMyBookingList";
 import { UserBooking } from "../../../interface/Booking";
 import userCancelBooking from "../../../helpers/user/userCancelBooking";
 import moment from "moment";
+import { useSnackBar } from "../../../context/useSnackbarContext";
 export default function ViewBookings(): JSX.Element {
   const { loggedInUser, token } = useAuth();
   const classes = useStyles();
@@ -20,6 +21,8 @@ export default function ViewBookings(): JSX.Element {
     new Date(now.getFullYear(), now.getMonth() - 1, now.getDate()),
     new Date(now.getFullYear(), now.getMonth() + 1, now.getDate()),
   ]);
+  const [count,setCount]= useState<number>(0);
+  const {updateSnackBarMessage} = useSnackBar();
 
   const cancelButton = (params: GridRenderCellParams) => {
     return (
@@ -29,7 +32,15 @@ export default function ViewBookings(): JSX.Element {
           color="primary"
           size="small"
           onClick={() => {
-            userCancelBooking({ reservationID: params.row.id, token });
+            userCancelBooking({ reservationID: params.row.id, token }).then((response)=>{
+              if(response.success){
+                updateSnackBarMessage("cancel the booking successfully!");
+              }else{
+                updateSnackBarMessage("fail to cancel: "+response.error);
+              }
+            }).finally(()=>{
+              setCount(count+1);
+            })
           }}
         >
           Cancel
@@ -46,25 +57,19 @@ export default function ViewBookings(): JSX.Element {
       editable: false,
       sortable: false,
     },
+
     { field: "roomID", headerName: "Room ID", width: 110, sortable: false },
+    { field: "libraryID", headerName: "Library ID", width: 110, sortable: false },
     {
-      field: "capacity",
-      headerName: "Capacity",
-      type: "number",
-      width: 110,
-      editable: false,
-      sortable: false,
-    },
-    {
-      field: "date",
-      headerName: "Date",
+      field: "startTime",
+      headerName: "start time",
       width: 150,
       editable: false,
       sortable: false,
     },
     {
-      field: "time",
-      headerName: "Time",
+      field: "endTime",
+      headerName: "end time",
       width: 150,
       editable: false,
       sortable: false,
@@ -90,7 +95,7 @@ export default function ViewBookings(): JSX.Element {
         setBookingList(response.success);
       }
     });
-  }, [loggedInUser, dateRange,token]);
+  }, [count,loggedInUser, dateRange,token]);
   return (
     <Grid
       container
