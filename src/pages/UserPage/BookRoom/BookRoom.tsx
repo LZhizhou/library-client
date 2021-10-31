@@ -11,7 +11,7 @@ import useStyles from "../useStyles";
 import { useEffect, useState } from "react";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { MenuItem } from "@material-ui/core";
-import { AdminLibrary, Library } from "../../../interface/Library";
+import { AdminLibrary, UserLibrary } from "../../../interface/Library";
 import getLibraryList from "../../../helpers/user/getLibraryList";
 import { useAuth } from "../../../context/useAuthContext";
 import getRoomList from "../../../helpers/admin/getRoomList";
@@ -21,7 +21,7 @@ import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicker from "@mui/lab/DatePicker";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 export default function BookRoom(): JSX.Element {
-  const [libraryList, setLibraryList] = useState<Library[]>([]);
+  const [libraryList, setLibraryList] = useState<UserLibrary[]>([]);
   const [roomList, setRoomList] = useState<Room[]>([]);
   const classes = useStyles();
   const { token, loggedInUser } = useAuth();

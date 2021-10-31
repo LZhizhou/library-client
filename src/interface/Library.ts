@@ -8,13 +8,13 @@ export interface AdminLibrary{
     roomCount:number,
     uRLs:string,
 }
-export interface Library{
+export interface UserLibrary{
     libraryID:string,
     name:string,
     roomCount:number,
 }
 export interface LibraryApiData {
     error?: string;
-    success?: Library[];
+    success?: UserLibrary[];
   }
   
