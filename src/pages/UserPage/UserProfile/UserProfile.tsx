@@ -1,5 +1,6 @@
 import {
   Button,
+  Grid,
   Paper,
   Typography,
 } from "@mui/material";
@@ -22,7 +23,10 @@ export default function UserProfile(): JSX.Element {
       <Typography className={classes.emailAndPhone}>
         {loggedInUser?.phone ?? "phone"}
       </Typography>
+      <Grid container justifyContent="center">
       <Button href="/login">Sign out</Button>
+</Grid>
+   
     </Paper>
   );
 }

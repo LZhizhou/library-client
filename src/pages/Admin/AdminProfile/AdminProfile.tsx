@@ -1,4 +1,5 @@
 import {
+  Grid,
   Link,
   Paper,
   Typography,
@@ -18,7 +19,9 @@ export default function AdminProfile(): JSX.Element {
         <Typography className={classes.username} variant="h6">{loggedInUser?.username??'username'}</Typography>
         <Typography className={classes.emailAndPhone}>{loggedInUser?.library?.email??'email'}</Typography>
         <Typography>Library Name :{loggedInUser?.library?.name}</Typography>
-        <Button  href="/login">Sign out</Button>
+        <Grid container justifyContent="center">
+      <Button href="/login">Sign out</Button>
+</Grid>
       </Paper>
 
   );
